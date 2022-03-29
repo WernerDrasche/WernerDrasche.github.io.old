@@ -1,0 +1,78 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://wernerdrasche.github.io/theme/css/style.css">
+        <link rel="stylesheet" href="https://wernerdrasche.github.io/theme/css/syntax.css">
+    </head>
+    <body>
+        <h1>0x90 - Werner Drasche's Website</h1>
+<h2>Continous Background during Dual Boot</h2>
+<h3>General</h3>
+<p>Before you start it has to be mentioned that for this tutorial to provide value in some way you need to have your dual boot setup with refind as the boot selector and plymouth as the splash screen displayer. I will also assume the use of the gnome display manager GDM with my gnome version being 3.38. If you don't use any of the just mentioned programs, abort reading instantaneously.</p>
+<h3>Bootloader</h3>
+<p>If you have a theme installed skip this step. To view anything inside the <em>/boot/efi</em> directory you need to become root so be ready to commit a deadly sin as you type the following command which will empower you to go wherever you desire.</p>
+<div class="highlight"><pre><span></span><code>su
+<span class="nb">cd</span> /boot/efi/EFI/refind
+</code></pre></div>
+
+<p>Use a text editor of your choice, vim or gedit for example, to add two lines into <em>refind.conf</em> and set the backgound you want to have on your system. The path to the png file is relative to the config file's location.</p>
+<p><em>refind.conf</em></p>
+<div class="highlight"><pre><span></span><code># should be .png
+banner [relative path of image file]
+banner_scale fillscreen
+</code></pre></div>
+
+<h3>Desktop</h3>
+<p>Copy that same image over to your local share directory. In Pop-OS this directory would be <em>/home/[username]/.local/share/backgrounds</em>. You might have to change permissions for the image file because doing stuff as root breaks them quite often.</p>
+<div class="highlight"><pre><span></span><code>cp <span class="o">[</span>image<span class="o">]</span> /home/<span class="o">[</span>username<span class="o">]</span>/.local/share/backgrounds
+su <span class="o">[</span>username<span class="o">]</span>
+<span class="nb">cd</span> 
+<span class="c1"># could be necessary if your background select gui doesn&#39;t find it</span>
+chmod <span class="m">666</span> .local/share/backgrounds/<span class="o">[</span>image<span class="o">]</span>
+</code></pre></div>
+
+<p>Now you should be able to select the background as your desktop background inside the gnome settings.</p>
+<h3>Login screen</h3>
+<p>This one will sadly require the use of a third party script which you can download from <a href="https://github.com/thiggy01/change-gdm-background">here</a>. Be careful, as it only works on distributions based on specific Ubuntu versions. Invoke the script with sudo.</p>
+<div class="highlight"><pre><span></span><code>sudo ./change-gdm-background <span class="o">[</span>path to image<span class="o">]</span>
+</code></pre></div>
+
+<p>If you have a dual monitor setup (or more) you should also consider doing the next couple of steps. First go into your settings and turn off all secondary monitors. After that you can copy the monitors.xml file to the gdm configuration directory like so.</p>
+<div class="highlight"><pre><span></span><code>sudo cp .config/monitors.xml /var/lib/gdm3/.config/
+</code></pre></div>
+
+<p>Now you can turn all your monitors back on.</p>
+<h3>Splash screen during boot</h3>
+<p>Plymouth doesn't work with the nvidia drivers which is a shame but it is what it is. To have a custom splash screen you will have to create a new plymouth theme.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> /usr/share/plymouth/themes
+sudo mkdir <span class="o">[</span>name<span class="o">]</span>
+sudo touch <span class="o">[</span>name<span class="o">]</span>.plymouth <span class="o">[</span>name<span class="o">]</span>.script
+</code></pre></div>
+
+<p>Don't forget to copy your background into this directory. Once your done doing all that run your favorite text editor with sudo and edit both files.</p>
+<p><em>.plymouth</em></p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">[</span><span class="nv">Plymouth Theme</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">Name=[name]</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">Description=my own theme</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">ModuleName=script</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">[script]</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">ImageDir=/usr/share/plymouth/themes/[name]</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">ScriptFile=/usr/share/plymouth/themes/[name]/[name].script</span><span class="w"></span>
+</code></pre></div>
+
+<p><em>.script</em></p>
+<div class="highlight"><pre><span></span><code><span class="n">wallpaperImage</span><span class="o">=</span><span class="nc">Image</span><span class="p">(</span><span class="ss">&quot;[image]&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="n">wallpaperSprite</span><span class="o">=</span><span class="n">Sprite</span><span class="p">(</span><span class="n">wallpaperImage</span><span class="p">);</span><span class="w"></span>
+<span class="n">wallpaperSprite</span><span class="p">.</span><span class="n">SetZ</span><span class="p">(</span><span class="o">-</span><span class="mi">100</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+
+<p>Now install and select the new theme.</p>
+<div class="highlight"><pre><span></span><code>sudo update-alternatives --install /usr/share/plymouth/themes/default.plymouth default.plymouth /usr/share/plymouth/themes/<span class="o">[</span>name<span class="o">]</span>/<span class="o">[</span>name<span class="o">]</span>.plymouth <span class="m">100</span>
+sudo update-alternatives --config default.plymouth
+sudo update-initramfs -u
+</code></pre></div>
+
+<p>Restart your system and admire the changes.</p>
+<br>
+<a href="https://wernerdrasche.github.io/index.html">Back to Index</a>
+    </body>
+</html>

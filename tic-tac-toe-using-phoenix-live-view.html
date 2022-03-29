@@ -1,0 +1,171 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://wernerdrasche.github.io/theme/css/style.css">
+        <link rel="stylesheet" href="https://wernerdrasche.github.io/theme/css/syntax.css">
+    </head>
+    <body>
+        <h1>0x90 - Werner Drasche's Website</h1>
+<h2>Tic-Tac-Toe using Phoenix Live View</h2>
+<h3>Create Epic Gamer Moments with Phoenix</h3>
+<h4>Setup</h4>
+<p>Have you ever wanted to program Tic-Tac-Toe, the most intimidating coding
+challenge known to mankind, as a website but without using the horrid fiend that is JavaScript? This guide will give you the enlightenment you seek.</p>
+<p>First we create a new phoenix project in a very swift and juicy fassion by typing this incredibly beautiful and mindboggling command.</p>
+<div class="highlight"><pre><span></span><code>mix phx.new --live --no-ecto --no-gettext --no-dashboard big_chungus
+</code></pre></div>
+
+<p>After indulging in this frevolous activity we will change our current working directory to become the chungus himself and start the server while we're at it.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> big_chungus
+mix phoenix.server
+</code></pre></div>
+
+<h4>Cleanup</h4>
+<p>Now we are ready to commence the transformation. First we will navigate to <em>lib/big_chungus/application.ex</em> and get rid of the Telemetry because who needs that anyway. Then proceed to go to <em>lib/big_chungus_web/live</em> and delete all the files contained in it, as we will be replacing them soon. While you're at it also delete <em>assets/css/*</em> and change the import statement to <em>"app.css"</em> inside <em>assets/js/app.js</em>. If you are motivated you can further clean up the project by getting rid of the totally unnecessary socket declaration in <em>lib/big_chungus_web/endpoint.ex</em> (not the live socket though, that is actually important). Now we are ready to begin to start chungin through our journey.</p>
+<h3>The template is our lord and savior</h3>
+<p>You heard what the header says. Create your damn template inside <em>lib/big_chungus_web/live/page.html.leex</em>!</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;h2</span> <span class="na">class=</span><span class="s">&quot;heading&quot;</span><span class="nt">&gt;</span>Tic Tac Toe<span class="nt">&lt;/h2&gt;</span>
+<span class="nt">&lt;section</span> <span class="na">class=</span><span class="s">&quot;game&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;play-area&quot;</span><span class="nt">&gt;</span>
+        <span class="cp">&lt;%=</span> <span class="k">for</span> <span class="n">n</span> <span class="o">&lt;-</span> <span class="mi">0</span><span class="o">..</span><span class="mi">8</span> <span class="k">do</span> <span class="cp">%&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;field&quot;</span> <span class="na">phx-click=</span><span class="s">&quot;select&quot;</span> <span class="na">phx-value-id=</span><span class="s">&quot;</span><span class="cp">&lt;%=</span> <span class="n">n</span> <span class="cp">%&gt;</span><span class="s">&quot;</span><span class="nt">&gt;</span><span class="cp">&lt;%=</span> <span class="no">Enum</span><span class="o">.</span><span class="n">fetch!</span><span class="p">(</span><span class="vi">@values</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="nt">&lt;/div&gt;</span>
+        <span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/section&gt;</span>
+</code></pre></div>
+
+<p>We are creating a section which will be a flexbox for easy centering and a div with a grid display, representing our playing area. Then a for loop creates 9 fields, set to trigger the phoenix <em>"select"</em> event sending their respective id to the server. We make this live view <em>live</em> by sending the field's contents in the socket, which will be updated selectively instead of rerendering the entire page. The css below goes into <em>/assets/css/app.css</em> if it's not obvious:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">html</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">text-align</span><span class="p">:</span><span class="w"> </span><span class="kc">center</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="p">.</span><span class="nc">game</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">display</span><span class="p">:</span><span class="w"> </span><span class="kc">flex</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">justify-content</span><span class="p">:</span><span class="w"> </span><span class="kc">center</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="p">.</span><span class="nc">game</span><span class="w"> </span><span class="p">.</span><span class="nc">play-area</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">display</span><span class="p">:</span><span class="w"> </span><span class="k">grid</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">grid-template-columns</span><span class="p">:</span><span class="w"> </span><span class="kc">auto</span><span class="w"> </span><span class="kc">auto</span><span class="w"> </span><span class="kc">auto</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="p">.</span><span class="nc">game</span><span class="w"> </span><span class="p">.</span><span class="nc">field</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">display</span><span class="p">:</span><span class="w"> </span><span class="kc">flex</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">flex-direction</span><span class="p">:</span><span class="w"> </span><span class="kc">column</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">justify-content</span><span class="p">:</span><span class="w"> </span><span class="kc">center</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">border-style</span><span class="p">:</span><span class="w"> </span><span class="kc">inset</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="kt">em</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">height</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="kt">em</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
+
+<p>The global <em>text-align</em> is for afterwards when we add messages to our template that will notify the player if the game has been won or drawn.</p>
+<h3>Big chungus awaits us</h3>
+<p>So let's not make him wait. We will now replace the second file we deleted earlier, namely <em>lib/big_chungus_web/live/page.ex</em>. Now we have to be really careful, so to not upset his majesty the biggest most graceful chungus, because we must name the module after him and only him. The module has to be defined like so:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">defmodule</span><span class="w"> </span><span class="nc">BigChungusWeb.PageLive</span><span class="w"> </span><span class="k">do</span><span class="w"></span>
+<span class="kn">use</span><span class="w"> </span><span class="nc">BigChungusWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:live_view</span><span class="w"></span>
+
+<span class="w">    </span><span class="kd">def</span><span class="w"> </span><span class="n">mount</span><span class="p">(</span><span class="n">_params</span><span class="p">,</span><span class="w"> </span><span class="n">_session</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p">)</span><span class="w"> </span><span class="k">do</span><span class="w"></span>
+<span class="w">        </span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="o">.</span><span class="n">duplicate</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">9</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="p">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">assign</span><span class="p">(</span><span class="n">socket</span><span class="p">,</span><span class="w"> </span><span class="ss">player</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;X&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">values</span><span class="p">:</span><span class="w"> </span><span class="n">values</span><span class="p">,</span><span class="w"> </span><span class="ss">status</span><span class="p">:</span><span class="w"> </span><span class="ss">:ok</span><span class="p">)}</span><span class="w"></span>
+<span class="w">    </span><span class="k">end</span><span class="w"></span>
+<span class="k">end</span><span class="w"></span>
+</code></pre></div>
+
+<p>The mount function initializes the socket and assigns some default values. In the beginning we naturally want an empty battle ground so we fill all the fields with spaces. The player to start the game is <em>"X"</em> and the game's status is set to <em>:ok</em> which means that a win or draw has not been reached yet. With all of this code in place we can now open our website at <em>localhost:5000</em> but when we click on a field we will get some very red messages in the server window, expressing big chungus' displeasure. He really does'nt like that we haven't implemented the select function so let's try to please him one last time.</p>
+<h3>Atrocious implementation</h3>
+<p>The following code is pretty bad as it's not generic at all and should probably be written differently, but I didn't want to think to much and it will be sufficient to please the master.</p>
+<h4>Status</h4>
+<p>First we will have to write a function that will check for the winning and draw conditions and subsequently return the updated status. For clarity's sake this private function will be called <em>status?</em>.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">defp</span><span class="w"> </span><span class="n">status?</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="w"> </span><span class="k">do</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># Chungus is still waiting</span><span class="w"></span>
+<span class="k">end</span><span class="w"></span>
+</code></pre></div>
+
+<p>Now we are going to step by step create a list of all winning combinations possible in the 3x3 playing area. We start with the rows:</p>
+<div class="highlight"><pre><span></span><code><span class="n">rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Enum</span><span class="o">.</span><span class="n">chunk_every</span><span class="p">(</span><span class="n">values</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"></span>
+</code></pre></div>
+
+<p>The columns are a bit more involved as we actually have to wright a custom function <em>columns/2</em> to collect them. There is most likely a more consice way to do it but we will go down the more straight forward path.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">defp</span><span class="w"> </span><span class="n">columns</span><span class="p">(</span><span class="n">values</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="p">\\</span><span class="w"> </span><span class="p">[])</span><span class="w"></span>
+<span class="kd">defp</span><span class="w"> </span><span class="n">columns</span><span class="p">(</span><span class="bp">_</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="bp">_</span><span class="p">,</span><span class="w"> </span><span class="bp">_</span><span class="p">,</span><span class="w"> </span><span class="bp">_</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">),</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="n">result</span><span class="w"></span>
+<span class="kd">defp</span><span class="w"> </span><span class="n">columns</span><span class="p">([</span><span class="bp">_</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">tail</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">values</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="k">do</span><span class="w"></span>
+<span class="w">    </span><span class="n">columns</span><span class="p">(</span><span class="n">tail</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nc">Enum</span><span class="o">.</span><span class="n">take_every</span><span class="p">(</span><span class="n">values</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">result</span><span class="p">])</span><span class="w"></span>
+<span class="k">end</span><span class="w"></span>
+</code></pre></div>
+
+<p>One can spot 3 function definitions.</p>
+<ol>
+<li>function header -&gt; specifies the default parameter</li>
+<li>break condition -&gt; if we accumulate 3 columns we return the result</li>
+<li>recursive procedure -&gt; create column list (3x row down) then repeat but with one element less in the values list (first argument)</li>
+</ol>
+<p>After this confusing desaster let us happily forget this function exists, use it once and never think about it again.</p>
+<div class="highlight"><pre><span></span><code><span class="n">cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">columns</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="w"></span>
+</code></pre></div>
+
+<p>The diagonals are trivial and self-explanatory. The only thing worth mentioning is the fact that we use <em>Enum.slice/1</em> to select all elements of the previous list except the first and the last.</p>
+<div class="highlight"><pre><span></span><code><span class="n">rl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Enum</span><span class="o">.</span><span class="n">take_every</span><span class="p">(</span><span class="n">values</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+<span class="n">lr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Enum</span><span class="o">.</span><span class="n">take_every</span><span class="p">(</span><span class="n">values</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Enum</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mi">1</span><span class="o">..</span><span class="mi">3</span><span class="p">)</span><span class="w"></span>
+</code></pre></div>
+
+<p>It is time for fusion:</p>
+<div class="highlight"><pre><span></span><code><span class="n">all</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">rl</span><span class="p">,</span><span class="w"> </span><span class="n">lr</span><span class="p">]</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">rows</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">cols</span><span class="w"></span>
+</code></pre></div>
+
+<p>With all the prep work done the last task left to be solved is to check if one of the lists has 3x "X" or 3x "Y". The Elixir standard library helps us to do exactly that.</p>
+<div class="highlight"><pre><span></span><code><span class="n">freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Enum</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">all</span><span class="p">,</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nc">Enum</span><span class="o">.</span><span class="n">frequencies</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Map</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span><span class="w"></span>
+<span class="k">end</span><span class="p">)</span><span class="w"></span>
+</code></pre></div>
+
+<p>We map an anonymous function to every list in <em>all</em>, count the occurances and finally delete the entry for the empty field. Now what's left to do is to check if the number 3 is hidden somewhere. If it is, it means the current player has won the match. We have to check for a draw, too. This is even simpler, because a draw naturally means we don't have any whitespace and a win has not been triggered yet, so we just check for absence of empty fields after the win condition check.</p>
+<div class="highlight"><pre><span></span><code><span class="k">cond</span><span class="w"> </span><span class="k">do</span><span class="w"></span>
+<span class="w">    </span><span class="nc">Enum</span><span class="o">.</span><span class="n">any?</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nc">Map</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Enum</span><span class="o">.</span><span class="n">member?</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="k">end</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="ss">:win</span><span class="w"></span>
+<span class="w">    </span><span class="ow">not</span><span class="w"> </span><span class="nc">Enum</span><span class="o">.</span><span class="n">member?</span><span class="p">(</span><span class="n">values</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot; &quot;</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="ss">:draw</span><span class="w"></span>
+<span class="w">    </span><span class="no">true</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="ss">:ok</span><span class="w"></span>
+</code></pre></div>
+
+<p>If none of the above apply status <em>:ok</em> is returned indicating that everything is ok and that chungus is still in a happy state of mind. With the status function up and running a last tremendous effort has to be made to plug everything together.</p>
+<h4>The last stretch</h4>
+<div class="highlight"><pre><span></span><code><span class="kd">def</span><span class="w"> </span><span class="n">handle_event</span><span class="p">(</span><span class="s2">&quot;select&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">%{</span><span class="s2">&quot;id&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">id</span><span class="p">},</span><span class="w"> </span><span class="n">socket</span><span class="p">)</span><span class="w"> </span><span class="k">do</span><span class="w"></span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">String</span><span class="o">.</span><span class="n">to_integer</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">socket</span><span class="o">.</span><span class="n">assigns</span><span class="o">.</span><span class="n">values</span><span class="w"></span>
+<span class="w">    </span><span class="n">player</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">socket</span><span class="o">.</span><span class="n">assigns</span><span class="o">.</span><span class="n">player</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nc">Enum</span><span class="o">.</span><span class="n">fetch!</span><span class="p">(</span><span class="n">values</span><span class="p">,</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot; &quot;</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">socket</span><span class="o">.</span><span class="n">assigns</span><span class="o">.</span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:ok</span><span class="w"> </span><span class="k">do</span><span class="w"></span>
+<span class="w">        </span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="o">.</span><span class="n">replace_at</span><span class="p">(</span><span class="n">values</span><span class="p">,</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">player</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="n">status?</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="w"> </span><span class="k">do</span><span class="w"></span>
+<span class="w">            </span><span class="ss">:ok</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span><span class="ss">:noreply</span><span class="p">,</span><span class="w"> </span><span class="n">assign</span><span class="p">(</span><span class="n">socket</span><span class="p">,</span><span class="w"> </span><span class="ss">player</span><span class="p">:</span><span class="w"> </span><span class="n">switch_player</span><span class="p">(</span><span class="n">player</span><span class="p">),</span><span class="w"> </span><span class="ss">values</span><span class="p">:</span><span class="w"> </span><span class="n">values</span><span class="p">)}</span><span class="w"></span>
+<span class="w">            </span><span class="n">status</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span><span class="ss">:noreply</span><span class="p">,</span><span class="w"> </span><span class="n">assign</span><span class="p">(</span><span class="n">socket</span><span class="p">,</span><span class="w"> </span><span class="ss">values</span><span class="p">:</span><span class="w"> </span><span class="n">values</span><span class="p">,</span><span class="w"> </span><span class="ss">status</span><span class="p">:</span><span class="w"> </span><span class="n">status</span><span class="p">)}</span><span class="w"></span>
+<span class="w">        </span><span class="k">end</span><span class="w"></span>
+<span class="w">    </span><span class="k">else</span><span class="w"></span>
+<span class="w">        </span><span class="p">{</span><span class="ss">:noreply</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">end</span><span class="w"></span>
+<span class="k">end</span><span class="w"></span>
+</code></pre></div>
+
+<p>When you read this code you might notice some functionality seemingly forgotten in the frenzy. It is of course <em>switch_player/1</em> which hopefully doen't need any further explaining.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">defp</span><span class="w"> </span><span class="n">switch_player</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">),</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;O&quot;</span><span class="w"></span>
+<span class="kd">defp</span><span class="w"> </span><span class="n">switch_player</span><span class="p">(</span><span class="s2">&quot;O&quot;</span><span class="p">),</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;X&quot;</span><span class="w"></span>
+</code></pre></div>
+
+<h3>We are almost done!</h3>
+<p>We still need to tell the player the game's status. We can achieve this by simply extending the html-template with the following lines.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;%=</span> <span class="k">case</span> <span class="vi">@status</span> <span class="k">do</span> <span class="cp">%&gt;</span>
+<span class="cp">&lt;%</span> <span class="ss">:win</span> <span class="o">-&gt;</span> <span class="cp">%&gt;</span><span class="nt">&lt;h2&gt;</span>Player <span class="cp">&lt;%=</span> <span class="vi">@player</span> <span class="cp">%&gt;</span> won the game!<span class="nt">&lt;/h2&gt;</span>
+<span class="cp">&lt;%</span> <span class="ss">:draw</span> <span class="o">-&gt;</span> <span class="cp">%&gt;</span><span class="nt">&lt;h2&gt;</span>It&#39;s a draw!<span class="nt">&lt;/h2&gt;</span>
+<span class="cp">&lt;%</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="cp">%&gt;</span>
+<span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+<span class="cp">&lt;%=</span> <span class="k">if</span> <span class="vi">@status</span> <span class="o">!=</span> <span class="ss">:ok</span> <span class="k">do</span> <span class="cp">%&gt;</span>
+<span class="cp">&lt;%=</span> <span class="n">live_redirect</span> <span class="s2">&quot;Restart&quot;</span><span class="p">,</span> <span class="ss">to</span><span class="p">:</span> <span class="no">Routes</span><span class="o">.</span><span class="n">tic_tac_toe_path</span><span class="p">(</span><span class="vi">@socket</span><span class="p">,</span> <span class="ss">:game</span><span class="p">)</span> <span class="cp">%&gt;</span>
+<span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+</code></pre></div>
+
+<p>Now you have mastered the art of Tic Tac Toe programming.</p>
+<h3>Big chungus remains happy.</h3>
+<p><img alt="Big Chungus" src="https://wernerdrasche.github.io/images/big-chungus.png"></p>
+<br>
+<a href="https://wernerdrasche.github.io/index.html">Back to Index</a>
+    </body>
+</html>

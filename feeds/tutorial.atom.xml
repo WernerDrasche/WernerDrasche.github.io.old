@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>0x90 - Tutorial</title><link href="https://wernerdrasche.github.io/" rel="alternate"></link><link href="https://wernerdrasche.github.io/feeds/tutorial.atom.xml" rel="self"></link><id>https://wernerdrasche.github.io/</id><updated>2022-03-28T00:00:00+02:00</updated><subtitle>Werner Drasche's Website</subtitle><entry><title>My Linux Setup for Programming</title><link href="https://wernerdrasche.github.io/my-linux-setup-for-programming.html" rel="alternate"></link><published>2022-03-28T00:00:00+02:00</published><updated>2022-03-28T00:00:00+02:00</updated><author><name>Werner Drasche</name></author><id>tag:wernerdrasche.github.io,2022-03-28:/my-linux-setup-for-programming.html</id><summary type="html">&lt;p&gt;This is an epic tutorial on how to setup Linux for the first semester of university,
 so you don't have to spend an ungodly amount of time figuring out how to get things
-into a working state. All configs required to follow along can be
-&lt;a href="https://wernerdrasche.github.io/downloads/dummy.tar.gz"&gt;downloaded&lt;/a&gt; and should be modified …&lt;/p&gt;</summary><content type="html">&lt;p&gt;This is an epic tutorial on how to setup Linux for the first semester of university,
+into a working state. If you want the entire &lt;em&gt;init.vim&lt;/em&gt; as well as an ugly script …&lt;/p&gt;</summary><content type="html">&lt;p&gt;This is an epic tutorial on how to setup Linux for the first semester of university,
 so you don't have to spend an ungodly amount of time figuring out how to get things
-into a working state. All configs required to follow along can be
-&lt;a href="https://wernerdrasche.github.io/downloads/dummy.tar.gz"&gt;downloaded&lt;/a&gt; and should be modified to fit
-ones specific needs. I used solus for this, which was a very bad decision because a lot
-of packages had to be built from source, as their repository is lacking in every way
-possible. &lt;/p&gt;
+into a working state. If you want the entire &lt;em&gt;init.vim&lt;/em&gt; as well as an ugly script to
+automatically generate java getters, setters and constructors you can download this
+&lt;a href="https://wernerdrasche.github.io/downloads/linux-setup-i3.tar.gz"&gt;archive&lt;/a&gt;. I used solus for this, which was a
+very bad decision because a lot of packages had to be built from source, as their
+repository is lacking in every way possible. &lt;/p&gt;
 &lt;h3&gt;Setting up Vim for Java&lt;/h3&gt;
 &lt;p&gt;First install VimPlug and add coc.nvim as your plugin of choice for LSP support.
 All the other plugins are for ergonomics only and not necessary, but I would recommend
@@ -382,4 +381,70 @@ we need to execute &lt;/p&gt;
 
 &lt;p&gt;and uncomment all lines in the generated &lt;em&gt;scope.sh&lt;/em&gt; which have something to do with
 previewing images and pdfs etc. Unfortunately this preview is broken when using split
-terinals, but for this you have a window manager now, so that should not be as important.&lt;/p&gt;</content><category term="Tutorial"></category></entry></feed>
+terinals, but for this you have a window manager now, so that should not be as important.&lt;/p&gt;</content><category term="Tutorial"></category><category term="linux"></category><category term="i3"></category><category term="vim"></category></entry><entry><title>Continous Background during Dual Boot</title><link href="https://wernerdrasche.github.io/continous-background-during-dual-boot.html" rel="alternate"></link><published>2021-06-02T00:00:00+02:00</published><updated>2021-06-02T00:00:00+02:00</updated><author><name>Werner Drasche</name></author><id>tag:wernerdrasche.github.io,2021-06-02:/continous-background-during-dual-boot.html</id><summary type="html">&lt;h3&gt;General&lt;/h3&gt;
+&lt;p&gt;Before you start it has to be mentioned that for this tutorial to provide value in some way you need to have your dual boot setup with refind as the boot selector and plymouth as the splash screen displayer. I will also assume the use of the gnome display …&lt;/p&gt;</summary><content type="html">&lt;h3&gt;General&lt;/h3&gt;
+&lt;p&gt;Before you start it has to be mentioned that for this tutorial to provide value in some way you need to have your dual boot setup with refind as the boot selector and plymouth as the splash screen displayer. I will also assume the use of the gnome display manager GDM with my gnome version being 3.38. If you don't use any of the just mentioned programs, abort reading instantaneously.&lt;/p&gt;
+&lt;h3&gt;Bootloader&lt;/h3&gt;
+&lt;p&gt;If you have a theme installed skip this step. To view anything inside the &lt;em&gt;/boot/efi&lt;/em&gt; directory you need to become root so be ready to commit a deadly sin as you type the following command which will empower you to go wherever you desire.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;su
+&lt;span class="nb"&gt;cd&lt;/span&gt; /boot/efi/EFI/refind
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Use a text editor of your choice, vim or gedit for example, to add two lines into &lt;em&gt;refind.conf&lt;/em&gt; and set the backgound you want to have on your system. The path to the png file is relative to the config file's location.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;refind.conf&lt;/em&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;# should be .png
+banner [relative path of image file]
+banner_scale fillscreen
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Desktop&lt;/h3&gt;
+&lt;p&gt;Copy that same image over to your local share directory. In Pop-OS this directory would be &lt;em&gt;/home/[username]/.local/share/backgrounds&lt;/em&gt;. You might have to change permissions for the image file because doing stuff as root breaks them quite often.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;cp &lt;span class="o"&gt;[&lt;/span&gt;image&lt;span class="o"&gt;]&lt;/span&gt; /home/&lt;span class="o"&gt;[&lt;/span&gt;username&lt;span class="o"&gt;]&lt;/span&gt;/.local/share/backgrounds
+su &lt;span class="o"&gt;[&lt;/span&gt;username&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="nb"&gt;cd&lt;/span&gt; 
+&lt;span class="c1"&gt;# could be necessary if your background select gui doesn&amp;#39;t find it&lt;/span&gt;
+chmod &lt;span class="m"&gt;666&lt;/span&gt; .local/share/backgrounds/&lt;span class="o"&gt;[&lt;/span&gt;image&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Now you should be able to select the background as your desktop background inside the gnome settings.&lt;/p&gt;
+&lt;h3&gt;Login screen&lt;/h3&gt;
+&lt;p&gt;This one will sadly require the use of a third party script which you can download from &lt;a href="https://github.com/thiggy01/change-gdm-background"&gt;here&lt;/a&gt;. Be careful, as it only works on distributions based on specific Ubuntu versions. Invoke the script with sudo.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo ./change-gdm-background &lt;span class="o"&gt;[&lt;/span&gt;path to image&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;If you have a dual monitor setup (or more) you should also consider doing the next couple of steps. First go into your settings and turn off all secondary monitors. After that you can copy the monitors.xml file to the gdm configuration directory like so.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo cp .config/monitors.xml /var/lib/gdm3/.config/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Now you can turn all your monitors back on.&lt;/p&gt;
+&lt;h3&gt;Splash screen during boot&lt;/h3&gt;
+&lt;p&gt;Plymouth doesn't work with the nvidia drivers which is a shame but it is what it is. To have a custom splash screen you will have to create a new plymouth theme.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /usr/share/plymouth/themes
+sudo mkdir &lt;span class="o"&gt;[&lt;/span&gt;name&lt;span class="o"&gt;]&lt;/span&gt;
+sudo touch &lt;span class="o"&gt;[&lt;/span&gt;name&lt;span class="o"&gt;]&lt;/span&gt;.plymouth &lt;span class="o"&gt;[&lt;/span&gt;name&lt;span class="o"&gt;]&lt;/span&gt;.script
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Don't forget to copy your background into this directory. Once your done doing all that run your favorite text editor with sudo and edit both files.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;.plymouth&lt;/em&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p p-Indicator"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;Plymouth Theme&lt;/span&gt;&lt;span class="p p-Indicator"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;Name=[name]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;Description=my own theme&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;ModuleName=script&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;[script]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;ImageDir=/usr/share/plymouth/themes/[name]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;ScriptFile=/usr/share/plymouth/themes/[name]/[name].script&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;.script&lt;/em&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;wallpaperImage&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nc"&gt;Image&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;[image]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="n"&gt;wallpaperSprite&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Sprite&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;wallpaperImage&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="n"&gt;wallpaperSprite&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SetZ&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Now install and select the new theme.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo update-alternatives --install /usr/share/plymouth/themes/default.plymouth default.plymouth /usr/share/plymouth/themes/&lt;span class="o"&gt;[&lt;/span&gt;name&lt;span class="o"&gt;]&lt;/span&gt;/&lt;span class="o"&gt;[&lt;/span&gt;name&lt;span class="o"&gt;]&lt;/span&gt;.plymouth &lt;span class="m"&gt;100&lt;/span&gt;
+sudo update-alternatives --config default.plymouth
+sudo update-initramfs -u
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Restart your system and admire the changes.&lt;/p&gt;</content><category term="Tutorial"></category><category term="linux"></category><category term="dual-boot"></category></entry></feed>

@@ -1,4 +1,4 @@
-p {
+p, li, img {
     max-width: 75ch;
 }
 
