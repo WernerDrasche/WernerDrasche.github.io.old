@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>0x90 - Shitpost</title><link href="https://wernerdrasche.github.io/" rel="alternate"></link><link href="https://wernerdrasche.github.io/feeds/shitpost.atom.xml" rel="self"></link><id>https://wernerdrasche.github.io/</id><updated>2021-05-30T00:00:00+02:00</updated><subtitle>Werner Drasche's Website</subtitle><entry><title>Tic-Tac-Toe using Phoenix Live View</title><link href="https://wernerdrasche.github.io/tic-tac-toe-using-phoenix-live-view.html" rel="alternate"></link><published>2021-05-30T00:00:00+02:00</published><updated>2021-05-30T00:00:00+02:00</updated><author><name>Werner Drasche</name></author><id>tag:wernerdrasche.github.io,2021-05-30:/tic-tac-toe-using-phoenix-live-view.html</id><summary type="html">&lt;h3&gt;Create Epic Gamer Moments with Phoenix&lt;/h3&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>0x90 - Shitpost</title><link href="/" rel="alternate"></link><link href="/feeds/shitpost.atom.xml" rel="self"></link><id>/</id><updated>2021-05-30T00:00:00+02:00</updated><subtitle>Werner Drasche's Website</subtitle><entry><title>Tic-Tac-Toe using Phoenix Live View</title><link href="/tic-tac-toe-using-phoenix-live-view.html" rel="alternate"></link><published>2021-05-30T00:00:00+02:00</published><updated>2021-05-30T00:00:00+02:00</updated><author><name>Werner Drasche</name></author><id>tag:None,2021-05-30:/tic-tac-toe-using-phoenix-live-view.html</id><summary type="html">&lt;h3&gt;Create Epic Gamer Moments with Phoenix&lt;/h3&gt;
 &lt;h4&gt;Setup&lt;/h4&gt;
 &lt;p&gt;Have you ever wanted to program Tic-Tac-Toe, the most intimidating coding
 challenge known to mankind, as a website but without using the horrid fiend that is JavaScript? This guide will give you the enlightenment you seek.&lt;/p&gt;
@@ -161,4 +161,4 @@ mix phoenix.server
 
 &lt;p&gt;Now you have mastered the art of Tic Tac Toe programming.&lt;/p&gt;
 &lt;h3&gt;Big chungus remains happy.&lt;/h3&gt;
-&lt;p&gt;&lt;img alt="Big Chungus" src="https://wernerdrasche.github.io/images/big-chungus.png"&gt;&lt;/p&gt;</content><category term="Shitpost"></category><category term="webdev"></category><category term="elixir"></category><category term="phoenix"></category></entry></feed>
+&lt;p&gt;&lt;img alt="Big Chungus" src="/images/big-chungus.png"&gt;&lt;/p&gt;</content><category term="Shitpost"></category><category term="webdev"></category><category term="elixir"></category><category term="phoenix"></category></entry></feed>
