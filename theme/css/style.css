@@ -5,3 +5,8 @@ p, li, img {
 .highlight {
     max-width: 75ch;
 }
+
+body {
+    width: 75ch;
+    margin: auto;
+}
