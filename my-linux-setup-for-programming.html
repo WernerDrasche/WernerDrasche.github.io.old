@@ -1,0 +1,393 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://WernerDrasche.github.io/theme/css/style.css">
+        <link rel="stylesheet" href="https://WernerDrasche.github.io/theme/css/syntax.css">
+    </head>
+    <body>
+        <h1>0x90 - Werner Drasche's Website</h1>
+<h2>My Linux Setup for Programming</h2>
+<p>This is an epic tutorial on how to setup Linux for the first semester of university,
+so you don't have to spend an ungodly amount of time figuring out how to get things
+into a working state. All configs required to follow along can be
+<a href="https://WernerDrasche.github.io/downloads/dummy.tar.gz">downloaded</a> and should be modified to fit
+ones specific needs. I used solus for this, which was a very bad decision because a lot
+of packages had to be built from source, as their repository is lacking in every way
+possible. </p>
+<h3>Setting up Vim for Java</h3>
+<p>First install VimPlug and add coc.nvim as your plugin of choice for LSP support.
+All the other plugins are for ergonomics only and not necessary, but I would recommend
+these anyway.</p>
+<p><em>init.vim</em></p>
+<div class="highlight"><pre><span></span><code><span class="k">call</span> plug#begin<span class="p">()</span>
+Plug <span class="s1">&#39;spf13/vim-autoclose&#39;</span>
+Plug <span class="s1">&#39;neoclide/coc.nvim&#39;</span><span class="p">,</span> {<span class="s1">&#39;branch&#39;</span>: <span class="s1">&#39;release&#39;</span>}    
+Plug <span class="s1">&#39;tpope/vim-surround&#39;</span>
+Plug <span class="s1">&#39;tpope/vim-repeat&#39;</span>
+Plug <span class="s1">&#39;easymotion/vim-easymotion&#39;</span>
+<span class="k">call</span> plug#<span class="k">end</span><span class="p">()</span>
+
+<span class="nb">syntax</span> <span class="k">on</span>
+<span class="k">let</span> mapleader<span class="p">=</span><span class="s1">&#39; &#39;</span>
+
+<span class="k">set</span> <span class="k">number</span>
+<span class="k">set</span> <span class="nb">hlsearch</span>
+<span class="k">set</span> <span class="nb">ignorecase</span>
+<span class="k">set</span> <span class="nb">incsearch</span>
+<span class="k">set</span> <span class="nb">expandtab</span>
+<span class="k">set</span> <span class="nb">shiftwidth</span><span class="p">=</span><span class="m">4</span>
+<span class="k">set</span> <span class="nb">smarttab</span>
+<span class="k">set</span> <span class="nb">autoindent</span>
+<span class="k">set</span> <span class="nb">autoread</span>
+
+<span class="k">set</span> <span class="nb">hidden</span>
+<span class="k">set</span> <span class="nb">nobackup</span>
+<span class="k">set</span> <span class="nb">nowritebackup</span>
+<span class="k">set</span> <span class="nb">cmdheight</span><span class="p">=</span><span class="m">2</span>
+<span class="k">set</span> <span class="nb">updatetime</span><span class="p">=</span><span class="m">300</span>
+<span class="k">set</span> <span class="nb">shortmess</span><span class="p">+=</span><span class="k">c</span>
+
+<span class="k">let</span> <span class="k">b</span>:coc_suggest_disable <span class="p">=</span> <span class="m">1</span>
+
+<span class="k">if</span> has<span class="p">(</span><span class="s2">&quot;nvim-0.5.0&quot;</span><span class="p">)</span> <span class="p">||</span> has<span class="p">(</span><span class="s2">&quot;patch-8.1.1564&quot;</span><span class="p">)</span>
+  <span class="k">set</span> signcolumn<span class="p">=</span><span class="k">number</span>
+<span class="k">else</span>
+  <span class="k">set</span> signcolumn<span class="p">=</span>yes
+<span class="k">endif</span>
+
+<span class="nb">inoremap</span> <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;&lt;</span>expr<span class="p">&gt;</span> <span class="p">&lt;</span>TAB<span class="p">&gt;</span>
+  \ pumvisible<span class="p">()</span> ? <span class="s2">&quot;\&lt;C-n&gt;&quot;</span> :
+  \ <span class="p">&lt;</span>SID<span class="p">&gt;</span>check_back_space<span class="p">()</span> ? <span class="s2">&quot;\&lt;TAB&gt;&quot;</span> :
+  \ coc#refresh<span class="p">()</span>
+<span class="nb">inoremap</span> <span class="p">&lt;</span>expr<span class="p">&gt;&lt;</span>S<span class="p">-</span>TAB<span class="p">&gt;</span> pumvisible<span class="p">()</span> ? <span class="s2">&quot;\&lt;C-p&gt;&quot;</span> : <span class="s2">&quot;\&lt;C-h&gt;&quot;</span>
+
+<span class="k">function</span><span class="p">!</span> s:check_back_space<span class="p">()</span> abort
+  <span class="k">let</span> <span class="k">col</span> <span class="p">=</span> <span class="k">col</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="p">-</span> <span class="m">1</span>
+  <span class="k">return</span> <span class="p">!</span><span class="k">col</span> <span class="p">||</span> getline<span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>[<span class="k">col</span> <span class="p">-</span> <span class="m">1</span>]  <span class="p">=~</span># <span class="s1">&#39;\s&#39;</span>
+<span class="k">endfunction</span>
+
+<span class="k">if</span> has<span class="p">(</span><span class="s1">&#39;nvim&#39;</span><span class="p">)</span>
+  <span class="nb">inoremap</span> <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;&lt;</span>expr<span class="p">&gt;</span> <span class="p">&lt;</span><span class="k">c</span><span class="p">-</span>space<span class="p">&gt;</span> coc#refresh<span class="p">()</span>
+<span class="k">else</span>
+  <span class="nb">inoremap</span> <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;&lt;</span>expr<span class="p">&gt;</span> <span class="p">&lt;</span><span class="k">c</span><span class="p">-</span>@<span class="p">&gt;</span> coc#refresh<span class="p">()</span>
+<span class="k">endif</span>
+
+nmap <span class="p">&lt;</span>leader<span class="p">&gt;</span>rn <span class="p">&lt;</span>Plug<span class="p">&gt;(</span>coc<span class="p">-</span>rename<span class="p">)</span>
+
+nmap <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> [<span class="k">g</span> <span class="p">&lt;</span>Plug<span class="p">&gt;(</span>coc<span class="p">-</span>diagnostic<span class="p">-</span><span class="k">prev</span><span class="p">)</span>
+nmap <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> ]<span class="k">g</span> <span class="p">&lt;</span>Plug<span class="p">&gt;(</span>coc<span class="p">-</span>diagnostic<span class="p">-</span>next<span class="p">)</span>
+
+nmap <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> <span class="nb">gd</span> <span class="p">&lt;</span>Plug<span class="p">&gt;(</span>coc<span class="p">-</span>definition<span class="p">)</span>
+nmap <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> gy <span class="p">&lt;</span>Plug<span class="p">&gt;(</span>coc<span class="p">-</span>type<span class="p">-</span>definition<span class="p">)</span>
+nmap <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> gi <span class="p">&lt;</span>Plug<span class="p">&gt;(</span>coc<span class="p">-</span>implementation<span class="p">)</span>
+nmap <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> <span class="k">gr</span> <span class="p">&lt;</span>Plug<span class="p">&gt;(</span>coc<span class="p">-</span>references<span class="p">)</span>
+
+<span class="nb">nnoremap</span> <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> K :<span class="k">call</span> <span class="p">&lt;</span>SID<span class="p">&gt;</span>show_documentation<span class="p">()&lt;</span>CR<span class="p">&gt;</span>
+
+<span class="k">function</span><span class="p">!</span> s:show_documentation<span class="p">()</span>
+  <span class="k">if</span> <span class="p">(</span>index<span class="p">(</span>[<span class="s1">&#39;vim&#39;</span><span class="p">,</span><span class="s1">&#39;help&#39;</span>]<span class="p">,</span> &amp;<span class="k">filetype</span><span class="p">)</span> <span class="p">&gt;=</span> <span class="m">0</span><span class="p">)</span>
+    execute <span class="s1">&#39;h &#39;</span>.expand<span class="p">(</span><span class="s1">&#39;&lt;cword&gt;&#39;</span><span class="p">)</span>
+  <span class="k">elseif</span> <span class="p">(</span>coc#rpc#ready<span class="p">())</span>
+    <span class="k">call</span> CocActionAsync<span class="p">(</span><span class="s1">&#39;doHover&#39;</span><span class="p">)</span>
+  <span class="k">else</span>
+    execute <span class="s1">&#39;!&#39;</span> . &amp;<span class="nb">keywordprg</span> . <span class="s2">&quot; &quot;</span> . expand<span class="p">(</span><span class="s1">&#39;&lt;cword&gt;&#39;</span><span class="p">)</span>
+  <span class="k">endif</span>
+<span class="k">endfunction</span>
+</code></pre></div>
+
+<p>With this config you now essentially have an IDE, but if you have to use java for
+whatever reason (university), the configuration step is not done yet. First install
+the java language server.</p>
+<div class="highlight"><pre><span></span><code>:PlugInstall
+:CocInstall coc-java
+</code></pre></div>
+
+<p>One also has to set an environment variable, so open up <em>~/.bashrc</em> and add the following
+line (the second one is optional and only a convenient place to put scripts which we can
+use later on to add some features of our own).</p>
+<p><em>.bashrc</em></p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">JDK_HOME</span><span class="o">=</span><span class="s2">&quot;/usr/local/lib64/jdk-17.0.1/bin&quot;</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$PATH</span><span class="s2">:</span><span class="nv">$HOME</span><span class="s2">/bin&quot;</span>
+</code></pre></div>
+
+<p>Now comes the part which took me way too long... integrating junit in vim. First one
+needs to download the <a href="https://junit.org/junit5/docs/current/user-guide/#running-tests-console-launcher">console launcher</a> from their website and put it somewhere like 
+~/lib/java/junit.jar to shorten the very long name. After that you can write a python 
+script to run the tests automatically or just copy the one that I wrote 
+(shitty but works).</p>
+<p><em>javarun.py</em></p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/python3</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">compile_args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-Xlint:unchecked&quot;</span><span class="p">]</span>
+<span class="n">compile_args</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">compile_args</span><span class="p">)</span>
+
+<span class="n">main_class_name</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+<span class="n">home</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;HOME&quot;</span><span class="p">]</span>
+<span class="n">src</span> <span class="o">=</span> <span class="n">cwd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+<span class="n">src</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src</span><span class="p">[:</span><span class="n">src</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;src&quot;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.java&quot;</span><span class="p">):</span>
+            <span class="n">class_name</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.java&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">class_path</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span><span class="o">+</span><span class="s2">&quot;/&quot;</span><span class="o">+</span><span class="n">class_name</span>
+            <span class="n">class_path_real</span> <span class="o">=</span> <span class="s2">&quot;classes/&quot;</span><span class="o">+</span><span class="n">class_path</span><span class="o">+</span><span class="s2">&quot;.class&quot;</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">class_path_real</span><span class="p">):</span>
+                <span class="n">class_time</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="n">class_path_real</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">class_time</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="n">root</span><span class="o">+</span><span class="s2">&quot;/&quot;</span><span class="o">+</span><span class="n">file</span>
+            <span class="n">file_time</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">file_time</span> <span class="o">&gt;</span> <span class="n">class_time</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Compile:&quot;</span><span class="p">,</span> <span class="n">class_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">))</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="s2">&quot;test&quot;</span> <span class="ow">in</span> <span class="n">class_path</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;javac -d classes </span><span class="si">{</span><span class="n">compile_args</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;javac -cp classes:</span><span class="si">{</span><span class="n">home</span><span class="si">}</span><span class="s2">/lib/java/junit.jar -d classes </span><span class="si">{</span><span class="n">compile_args</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">class_name</span> <span class="o">==</span> <span class="n">main_class_name</span><span class="p">:</span>
+                <span class="n">main_class_path</span> <span class="o">=</span> <span class="n">class_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run:&quot;</span><span class="p">,</span> <span class="n">main_class_path</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="s2">&quot;test&quot;</span> <span class="ow">in</span> <span class="n">main_class_path</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;java -cp classes </span><span class="si">{</span><span class="n">main_class_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;java -jar </span><span class="si">{</span><span class="n">home</span><span class="si">}</span><span class="s2">/lib/java/junit.jar -cp classes -c </span><span class="si">{</span><span class="n">main_class_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>One last thing that will get in the way is the autocompletion for junit methods. To get
+this working one must add junit to the project's classpath which is normally done for
+you by a proper IDE. So we need another python script to automate the automation.
+Unfortunately I didn't want to spend too much time on all of this tooling, so for
+argument passing I decided to use pyperclip (for clipboard access). This is useful for
+the other scripts which are also included in the downladable archive.</p>
+<p><em>clipboard.py</em></p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/python3</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">pyperclip</span>
+
+<span class="n">command</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="k">if</span> <span class="n">command</span> <span class="o">==</span> <span class="s2">&quot;add&quot;</span><span class="p">:</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">pyperclip</span><span class="o">.</span><span class="n">paste</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">text</span> <span class="o">+=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">pyperclip</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">command</span> <span class="o">==</span> <span class="s2">&quot;clear&quot;</span><span class="p">:</span>
+    <span class="n">pyperclip</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p><em>classpath.py</em></p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/python3</span>
+
+<span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pyperclip</span>
+
+<span class="n">home</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;HOME&quot;</span><span class="p">]</span>
+<span class="n">installed</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;junit&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">home</span><span class="si">}</span><span class="s2">/lib/java/junit.jar&quot;</span><span class="p">}</span>
+
+<span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+<span class="n">project_dir</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">[:</span><span class="n">cwd</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;src&quot;</span><span class="p">)])</span>
+<span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">project_dir</span><span class="o">+</span><span class="s2">&quot;/.classpath&quot;</span><span class="p">)</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
+<span class="n">paths</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;classpathentry&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;lib&quot;</span><span class="p">:</span>
+        <span class="n">paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">))</span>
+
+<span class="n">clipboard</span> <span class="o">=</span> <span class="n">pyperclip</span><span class="o">.</span><span class="n">paste</span><span class="p">()</span>
+<span class="n">selected</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">installed</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">clipboard</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">lib</span> <span class="ow">in</span> <span class="n">selected</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">installed</span><span class="p">[</span><span class="n">lib</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+        <span class="n">answer</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Add &quot;</span><span class="o">+</span><span class="n">lib</span><span class="o">+</span><span class="s2">&quot; to classpath? (y|n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">answer</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span> <span class="ow">or</span> <span class="n">answer</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s2">&quot;classpathentry&quot;</span><span class="p">)</span>
+            <span class="n">entry</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;exported&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span>
+            <span class="n">entry</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">,</span> <span class="s2">&quot;lib&quot;</span><span class="p">)</span>
+            <span class="n">entry</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="n">installed</span><span class="p">[</span><span class="n">lib</span><span class="p">])</span>
+            <span class="n">root</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+
+<span class="n">tree</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">project_dir</span><span class="o">+</span><span class="s2">&quot;/.classpath&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Now we just need to hook our scripts to our vim config. I chose F5 for running a class
+and ^ for the classpath thing. These choices are arbitrary and should be customized.</p>
+<div class="highlight"><pre><span></span><code><span class="k">au</span> <span class="nb">FileType</span> java <span class="nb">nnoremap</span> <span class="p">&lt;</span>F5<span class="p">&gt;</span>
+    :<span class="k">w</span><span class="p">&lt;</span>CR<span class="p">&gt;&lt;</span>C<span class="p">-</span>W<span class="p">&gt;</span>s<span class="p">&lt;</span>C<span class="p">-</span>W<span class="p">&gt;</span><span class="k">j</span>:<span class="nb">term</span> javarun.<span class="k">py</span> \<span class="p">&lt;</span>C<span class="p">-</span><span class="k">r</span><span class="p">&gt;</span>\<span class="p">&lt;</span>C<span class="p">-</span><span class="k">r</span><span class="p">&gt;=</span>expand<span class="p">(</span><span class="s2">&quot;%&lt;&quot;</span><span class="p">)&lt;</span>ESC<span class="p">&gt;&lt;</span>C<span class="p">-</span>R<span class="p">&gt;</span><span class="k">x</span><span class="p">&lt;</span>CR<span class="p">&gt;</span>
+<span class="k">au</span> <span class="nb">FileType</span> java <span class="nb">nnoremap</span> ^ 
+    :<span class="k">silent</span> <span class="p">!</span><span class="nb">clipboard</span> clear<span class="p">&lt;</span>CR<span class="p">&gt;</span>yy:<span class="k">silent</span> <span class="p">!</span><span class="nb">clipboard</span>.<span class="k">py</span> add <span class="s2">&quot;&lt;C-r&gt;&quot;</span>&quot;<span class="p">&lt;</span>CR<span class="p">&gt;&lt;</span>C<span class="p">-</span>W<span class="p">&gt;</span>s<span class="p">&lt;</span>C<span class="p">-</span>W<span class="p">&gt;</span><span class="k">j</span>:<span class="nb">term</span> classpath.<span class="k">py</span><span class="p">&lt;</span>CR<span class="p">&gt;</span>
+</code></pre></div>
+
+<h3>Setting up i3 Window Manager</h3>
+<p>Vim is done and ready, but our ultimate Linux environment is not, as it still needs a
+tiling window manager (I chose i3) for maximum productivity gain (or loss, depending how
+you count the countless hours spent on fixing shit, that worked in gnome but not in i3). 
+First install i3-gaps and log into a session. Then make sure you have the correct
+keyboard layout selected and run the configuration wizard. If you want a wallpaper you
+can install feh which we will autostart inside the i3 config. I personally like flameshot
+as a screenshot utility, so I'll add it as well.</p>
+<div class="highlight"><pre><span></span><code>setxkbmap us
+i3-config-wizard
+sudo eopkg it picom rofi feh flameshot
+</code></pre></div>
+
+<p>The fun part is editing <em>~/.config/i3/config</em>, so edit it. I would propose the following
+changes to the default.</p>
+<p><em>i3/config</em></p>
+<div class="highlight"><pre><span></span><code><span class="k">set</span><span class="w"> </span><span class="err">$</span><span class="n">up</span><span class="w"> </span><span class="n">k</span><span class="w"></span>
+<span class="k">set</span><span class="w"> </span><span class="err">$</span><span class="n">down</span><span class="w"> </span><span class="n">j</span><span class="w"></span>
+<span class="k">set</span><span class="w"> </span><span class="err">$</span><span class="nf">left</span><span class="w"> </span><span class="n">h</span><span class="w"></span>
+<span class="k">set</span><span class="w"> </span><span class="err">$</span><span class="nf">right</span><span class="w"> </span><span class="n">l</span><span class="w"></span>
+
+<span class="n">font</span><span class="w"> </span><span class="nl">pango</span><span class="p">:</span><span class="n">Sans</span><span class="w"> </span><span class="n">Regular</span><span class="w"> </span><span class="mi">10</span><span class="w"></span>
+
+<span class="k">exec</span><span class="w"> </span><span class="o">--</span><span class="k">no</span><span class="o">-</span><span class="n">startup</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">setxkbmap</span><span class="w"> </span><span class="n">us</span><span class="w"> </span><span class="o">-</span><span class="k">option</span><span class="w"> </span><span class="nl">caps</span><span class="p">:</span><span class="k">escape</span><span class="w"> </span><span class="o">-</span><span class="k">option</span><span class="w"> </span><span class="nl">ctrl</span><span class="p">:</span><span class="n">swap_rwin_rctl</span><span class="w"></span>
+<span class="k">exec</span><span class="w"> </span><span class="o">--</span><span class="k">no</span><span class="o">-</span><span class="n">startup</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">feh</span><span class="w"> </span><span class="o">--</span><span class="n">bg</span><span class="o">-</span><span class="n">scale</span><span class="w"> </span><span class="err">{</span><span class="k">PATH</span><span class="o">-</span><span class="k">TO</span><span class="o">-</span><span class="n">YOUR</span><span class="o">-</span><span class="n">WALLPAPER</span><span class="err">}</span><span class="w"></span>
+<span class="k">exec</span><span class="w"> </span><span class="o">--</span><span class="k">no</span><span class="o">-</span><span class="n">startup</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">picom</span><span class="w"></span>
+<span class="k">exec</span><span class="w"> </span><span class="o">--</span><span class="k">no</span><span class="o">-</span><span class="n">startup</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">flameshot</span><span class="w"></span>
+
+<span class="n">bindsym</span><span class="w"> </span><span class="n">Mod4</span><span class="o">+</span><span class="n">d</span><span class="w"> </span><span class="k">exec</span><span class="w"> </span><span class="o">--</span><span class="k">no</span><span class="o">-</span><span class="n">startup</span><span class="o">-</span><span class="n">id</span><span class="w"> </span><span class="n">rofi</span><span class="w"> </span><span class="o">-</span><span class="n">show</span><span class="w"> </span><span class="n">run</span><span class="w"></span>
+
+<span class="n">mode</span><span class="w"> </span><span class="ss">&quot;exit: [l]ogout, [r]eboot, [s]hutdown, s[u]spend&quot;</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
+<span class="w">  </span><span class="n">bindsym</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">exec</span><span class="w"> </span><span class="n">i3</span><span class="o">-</span><span class="n">msg</span><span class="w"> </span><span class="k">exit</span><span class="w"></span>
+<span class="w">  </span><span class="n">bindsym</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="k">exec</span><span class="w"> </span><span class="n">reboot</span><span class="w"></span>
+<span class="w">  </span><span class="n">bindsym</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="k">exec</span><span class="w"> </span><span class="k">shutdown</span><span class="w"> </span><span class="n">now</span><span class="w"></span>
+<span class="w">  </span><span class="n">bindsym</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="n">mode</span><span class="w"> </span><span class="ss">&quot;default&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">exec</span><span class="w"> </span><span class="n">suspend</span><span class="p">.</span><span class="n">sh</span><span class="w"></span>
+<span class="w">  </span><span class="n">bindsym</span><span class="w"> </span><span class="k">Escape</span><span class="w"> </span><span class="n">mode</span><span class="w"> </span><span class="ss">&quot;default&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="n">bindsym</span><span class="w"> </span><span class="k">Return</span><span class="w"> </span><span class="n">mode</span><span class="w"> </span><span class="ss">&quot;default&quot;</span><span class="w"></span>
+<span class="err">}</span><span class="w"></span>
+
+<span class="n">bindsym</span><span class="w"> </span><span class="n">Mod4</span><span class="o">+</span><span class="n">Shift</span><span class="o">+</span><span class="n">e</span><span class="w"> </span><span class="n">mode</span><span class="w"> </span><span class="ss">&quot;exit: [l]ogout, [r]eboot, [s]hutdown, s[u]spend&quot;</span><span class="w"></span>
+
+<span class="n">for_window</span><span class="o">[</span><span class="n">class=&quot;Gnome-control-center&quot;</span><span class="o">]</span><span class="w"> </span><span class="n">floating</span><span class="w"> </span><span class="n">enable</span><span class="w"></span>
+<span class="n">for_window</span><span class="o">[</span><span class="n">class=&quot;Gnome-calculator&quot;</span><span class="o">]</span><span class="w"> </span><span class="n">floating</span><span class="w"> </span><span class="n">enable</span><span class="w"></span>
+<span class="n">for_window</span><span class="o">[</span><span class="n">class=&quot;Gnome-disks&quot;</span><span class="o">]</span><span class="w"> </span><span class="n">floating</span><span class="w"> </span><span class="n">enable</span><span class="w"></span>
+<span class="n">for_window</span><span class="o">[</span><span class="n">class=&quot;Gnome-system-monitor&quot;</span><span class="o">]</span><span class="w"> </span><span class="n">floating</span><span class="w"> </span><span class="n">enable</span><span class="w"></span>
+</code></pre></div>
+
+<p>If you have multiple monitors like I do, i3 can be a pain in the ass. As a result you
+will probably have to edit some strange files. Before doing that though run xrandr and
+note the name of your connected outputs like HDMI-1 or eDP-1 etc. Go into
+<em>/etc/X11/xorg.conf.d/</em> and create the file <em>11-monitor.conf</em>. There add an entry for
+every monitor you have plugged in and replace the names for my monitors with yours.</p>
+<p><em>11-monitor.conf</em></p>
+<div class="highlight"><pre><span></span><code><span class="se">Section</span> <span class="se">&quot;Monitor&quot;</span>
+        <span class="nb">Identifier</span> <span class="no">&quot;HDMI-1&quot;</span>
+        <span class="nb">Option</span>  <span class="no">&quot;Enable&quot;    &quot;True&quot;</span>
+        <span class="nb">Option</span> <span class="no">&quot;Primary&quot; &quot;True&quot;</span>
+<span class="se">EndSection</span>
+
+<span class="se">Section</span> <span class="se">&quot;Monitor&quot;</span>
+        <span class="nb">Identifier</span> <span class="no">&quot;eDP-1&quot;</span>
+        <span class="nb">Option</span>  <span class="no">&quot;Enable&quot;    &quot;True&quot;</span>
+        <span class="nb">Option</span>  <span class="no">&quot;RightOf&quot;   &quot;HDMI-1&quot;</span>
+<span class="se">EndSection</span>
+</code></pre></div>
+
+<p>The last really annoying thing about i3 is the lockscreen which attempts to kill your
+eyes. Inside the archive you will find a folder called <em>i3lock-blur</em>. Put it somewhere
+where you can find it later and change the resolution if needed (if your primary monitor
+is not 1920x1080). Optionally to make your life easier you can create a symlink in
+<em>~/bin</em> pointing to <em>lock.sh</em> and call it the same name. I would also recommend using
+i3lock as sparingly as possible because it leaks memory every time you use it. Bindsym
+this program to a key combination of your choice and enjoy some blur with a memory leak.
+Lastly create a script called <em>suspend.sh</em>, so that your screen will be locked at
+suspend.</p>
+<p><em>suspend.sh</em></p>
+<div class="highlight"><pre><span></span><code><span class="o">{</span>ABSOLUTE-PATH-TO-LOCK.SH<span class="o">}</span>
+sleep <span class="m">2</span>
+systemctl <span class="nb">suspend</span>
+</code></pre></div>
+
+<p>The absolute path is only necessary if you intend to also set up autosuspend as the
+script will be then run as root.</p>
+<h3>Setting up Autosuspend after a certain Idle Time</h3>
+<p>I wanted to have a custom window pop up which would warn me from the incoming autosuspend
+a few seconds before it would do it. I came around the program <a href="https://github.com/mrmekon/circadian.git">circadian</a> which ended up working for me. Circadian needs to be run as
+root, so to make it compatible with our i3 config we need to add a rule in <em>etc/sudoers</em>.
+Use the command</p>
+<div class="highlight"><pre><span></span><code>sudo visudo /etc/sudoers
+</code></pre></div>
+
+<p>to edit this particular file.</p>
+<p><em>sudoers</em></p>
+<div class="highlight"><pre><span></span><code>{YOUR-USERNAME} {YOUR-HOSTNAME}= NOPASSWD: /usr/local/bin/circadian
+</code></pre></div>
+
+<p>Make sure that netstat etc. are inside root's PATH otherwise uncomment the appropriate
+lines with visudo. I again wrote a python script to implement the window with the
+countdown to be called by circadian (configured inside <em>/etc/circadian.conf</em>).</p>
+<p><em>suspend.py</em></p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/python3</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">tkinter</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+<span class="n">root</span><span class="o">.</span><span class="n">attributes</span><span class="p">(</span><span class="s2">&quot;-type&quot;</span><span class="p">,</span> <span class="s2">&quot;dialog&quot;</span><span class="p">)</span>
+<span class="n">top</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="n">Label</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;automatic suspend in: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="n">LEFT</span><span class="p">)</span>
+<span class="n">seconds</span> <span class="o">=</span> <span class="n">StringVar</span><span class="p">()</span>
+<span class="n">Label</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="n">textvariable</span><span class="o">=</span><span class="n">seconds</span><span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="n">LEFT</span><span class="p">)</span>
+<span class="n">top</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">padx</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">countdown</span><span class="p">(</span><span class="n">init</span><span class="p">):</span>
+    <span class="n">seconds</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">init</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">while</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">val</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="n">seconds</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="n">root</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span> 
+    <span class="k">except</span><span class="p">:</span> <span class="k">return</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;{PATH-TO-YOUR-HOME}/bin/suspend.sh&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">prevent</span><span class="p">():</span>
+    <span class="n">root</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+    <span class="n">seconds</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">bottom</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="n">Button</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Prevent&quot;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="n">prevent</span><span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+<span class="n">bottom</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">countdown</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,))</span>
+<span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">root</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
+<span class="k">try</span><span class="p">:</span> <span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
+<span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+</code></pre></div>
+
+<p>Finally hook everything up by autostarting circadian with sudo inside <em>i3/config</em>.</p>
+<h3>Setup Ranger</h3>
+<p>Ranger is a command line file manager with a nice preview function. To make the preview
+work for images and pdf I had to install ueberzug, as the default method w3m was broken
+with terminator (the terminal I use) and apparently only works well with urxvt. Ueberzug
+has some dependencies, so install these first (pip will tell you what's missing).</p>
+<div class="highlight"><pre><span></span><code>sudo eopkg it ranger
+pip install ueberzug
+</code></pre></div>
+
+<p>Go to <em>~/.config/ranger</em> and create <em>rc.conf</em> with the following settings.</p>
+<p><em>ranger/rc.conf</em></p>
+<div class="highlight"><pre><span></span><code><span class="nb">set</span> preview_images <span class="nb">true</span>
+<span class="nb">set</span> colorscheme default
+<span class="nb">set</span> use_preview_script <span class="nb">true</span>
+<span class="nb">set</span> preview_images_method ueberzug
+</code></pre></div>
+
+<p>What's missing now is the preview script which we are telling ranger to use. For this
+we need to execute </p>
+<div class="highlight"><pre><span></span><code>ranger --copy-config<span class="o">=</span>scope
+</code></pre></div>
+
+<p>and uncomment all lines in the generated <em>scope.sh</em> which have something to do with
+previewing images and pdfs etc. Unfortunately this preview is broken when using split
+terinals, but for this you have a window manager now, so that should not be as important.</p>
+<br>
+<a href="https://WernerDrasche.github.io/index.html">Back to Index</a>
+    </body>
+</html>
