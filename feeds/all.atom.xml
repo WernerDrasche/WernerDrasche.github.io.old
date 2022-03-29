@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>0x90</title><link href="www.wernerdrasche.xyz/" rel="alternate"></link><link href="www.wernerdrasche.xyz/feeds/all.atom.xml" rel="self"></link><id>www.wernerdrasche.xyz/</id><updated>2022-03-28T00:00:00+02:00</updated><subtitle>Werner Drasche's Website</subtitle><entry><title>My Linux Setup for Programming</title><link href="www.wernerdrasche.xyz/my-linux-setup-for-programming.html" rel="alternate"></link><published>2022-03-28T00:00:00+02:00</published><updated>2022-03-28T00:00:00+02:00</updated><author><name>Werner Drasche</name></author><id>tag:None,2022-03-28:www.wernerdrasche.xyz/my-linux-setup-for-programming.html</id><summary type="html">&lt;p&gt;This is an epic tutorial on how to setup Linux for the first semester of university,
+<feed xmlns="http://www.w3.org/2005/Atom"><title>0x90</title><link href="https://wernerdrasche.github.io/" rel="alternate"></link><link href="https://wernerdrasche.github.io/feeds/all.atom.xml" rel="self"></link><id>https://wernerdrasche.github.io/</id><updated>2022-03-28T00:00:00+02:00</updated><subtitle>Werner Drasche's Website</subtitle><entry><title>My Linux Setup for Programming</title><link href="https://wernerdrasche.github.io/my-linux-setup-for-programming.html" rel="alternate"></link><published>2022-03-28T00:00:00+02:00</published><updated>2022-03-28T00:00:00+02:00</updated><author><name>Werner Drasche</name></author><id>tag:wernerdrasche.github.io,2022-03-28:/my-linux-setup-for-programming.html</id><summary type="html">&lt;p&gt;This is an epic tutorial on how to setup Linux for the first semester of university,
 so you don't have to spend an ungodly amount of time figuring out how to get things
 into a working state. All configs required to follow along can be
-&lt;a href="www.wernerdrasche.xyz/downloads/dummy.tar.gz"&gt;downloaded&lt;/a&gt; and should be modified …&lt;/p&gt;</summary><content type="html">&lt;p&gt;This is an epic tutorial on how to setup Linux for the first semester of university,
+&lt;a href="https://wernerdrasche.github.io/downloads/dummy.tar.gz"&gt;downloaded&lt;/a&gt; and should be modified …&lt;/p&gt;</summary><content type="html">&lt;p&gt;This is an epic tutorial on how to setup Linux for the first semester of university,
 so you don't have to spend an ungodly amount of time figuring out how to get things
 into a working state. All configs required to follow along can be
-&lt;a href="www.wernerdrasche.xyz/downloads/dummy.tar.gz"&gt;downloaded&lt;/a&gt; and should be modified to fit
+&lt;a href="https://wernerdrasche.github.io/downloads/dummy.tar.gz"&gt;downloaded&lt;/a&gt; and should be modified to fit
 ones specific needs. I used solus for this, which was a very bad decision because a lot
 of packages had to be built from source, as their repository is lacking in every way
 possible. &lt;/p&gt;
